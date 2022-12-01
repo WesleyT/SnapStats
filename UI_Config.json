@@ -1,0 +1,46 @@
+{
+    "output_file": "settings.json",
+    "CurrentRank": {
+      "type": "textbox",
+      "value": 10,
+      "label": "Current Rank",
+      "tooltip": "Your current rank in Snap",
+      "group": "Core"
+    },
+    "RankCubes": {
+      "type": "textbox",
+      "value": 0,
+      "label": "Current Cubes",
+      "tooltip": "The ammount of cubes in your current rank",
+      "group": "Core"
+    },
+    "HighestRank": {
+      "type": "textbox",
+      "value": 10,
+      "label": "Highest Rank",
+      "tooltip": "Your highest rank this season",
+      "group": "Core"
+    },
+    "CollectionLevel": {
+      "type": "textbox",
+      "value": 50,
+      "label": "Collection Level",
+      "tooltip": "Your collection level",
+      "group": "Core"
+    },
+    "Permission": {
+      "type": "dropdown",
+      "value": "moderator",
+      "items": ["everyone","moderator","subscriber","user_specific","editor"],
+      "label": "Permission",
+      "tooltip": "Who is able to use the commands",
+      "group": "Core"
+    },
+    "Username": {
+      "type": "textbox",
+      "value": "",
+      "label": "Username",
+      "tooltip": "This field should only be filled when using the user_specific permission.",
+      "group": "Core"
+    }
+  }
