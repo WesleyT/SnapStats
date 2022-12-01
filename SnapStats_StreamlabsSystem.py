@@ -39,49 +39,76 @@ def Init():
         os.makedirs(directory)
 
     #   Create Stats Files with default or entered settings (will not overwrite)
+    #   Also creates global variables while checking if files are created
     path = os.path.join(topdir, "Stats\current_rank.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
             f.write(str(settings["CurrentRank"]))
-
+    with io.open(path, "r") as f:
+        global CurrentRank
+        CurrentRank = int(f.read())
+    Parent.Log(ScriptName,"Rank is set at "+str(CurrentRank))
+    
     path = os.path.join(topdir, "Stats\highest_rank.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
-            f.write(str(settings["CurrentRank"]))
+            f.write(str(settings["HighestRank"]))
+    with io.open(path, "r") as f:
+        global HighestRank
+        HighestRank = int(f.read())
+    Parent.Log(ScriptName,"Highest Rank is set at "+str(HighestRank))
 
     path = os.path.join(topdir, "Stats\collection_level.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
             f.write(str(settings["CollectionLevel"]))
+    with io.open(path, "r") as f:
+        global CollectionLevel
+        CollectionLevel = int(f.read())
+    Parent.Log(ScriptName,"Collection Level is set at "+str(CollectionLevel))
 
     path = os.path.join(topdir, "Stats\current_rank_cubes.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
             f.write(str(settings["RankCubes"]))
+    with io.open(path, "r") as f:
+        global RankCubes
+        RankCubes = int(f.read())
+    Parent.Log(ScriptName,"Cubes in current rank is set at "+str(RankCubes))
 
     path = os.path.join(topdir, "Stats\cubes_today.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
             f.write("0")
+    with io.open(path, "r") as f:
+        global CubesToday
+        CubesToday = int(f.read())
+    Parent.Log(ScriptName,"Cubes Today is set at "+str(CubesToday))
 
     path = os.path.join(topdir, "Stats\wins.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
             f.write("0")
+    with io.open(path, "r") as f:
+        global Wins
+        Wins = int(f.read())
+    Parent.Log(ScriptName,"Wins is set at "+str(Wins))
 
     path = os.path.join(topdir, "Stats\losses.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
             f.write("0")
-
-    # Sets Daily Variables
-
+    with io.open(path, "r") as f:
+        global Losses
+        Losses = int(f.read())
+    Parent.Log(ScriptName,"Losses is set at "+str(Losses))
 
     return
 
 # Execute Data
 def Execute(data):
     # Collection level !cl followed by a number
+    
     if data.IsChatMessage() and data.GetParam(0).lower() == "!cl" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             commandsplit = data.Message.split(" ")
@@ -119,29 +146,37 @@ def Parse(parseString, userid, username, targetid, targetname, message):
 
 # Saves currently entered values to stats
 def Save():
+
+    try:
+        with io.open(os.path.join(topdir, settingsFile), encoding="utf-8-sig", mode="r") as f:
+            settings = json.load(f, encoding="utf-8-sig")
+
+        path = os.path.join(topdir, "Stats\current_rank.txt")
+        with io.open(path, "w") as f:
+            f.write(str(settings["CurrentRank"]))
+
+        path = os.path.join(topdir, "Stats\highest_rank.txt")
+        with io.open(path, "w") as f:
+            f.write(str(settings["HighestRank"]))
+
+        path = os.path.join(topdir, "Stats\collection_level.txt")
+        with io.open(path, "w") as f:
+            f.write(str(settings["CollectionLevel"]))
+
+        path = os.path.join(topdir, "Stats\current_rank_cubes.txt")
+        with io.open(path, "w") as f:
+            f.write(str(settings["RankCubes"]))
+
+    except:
+        Parent.Log(ScriptName, "Save Failed")
     
-    path = os.path.join(topdir, "Stats\current_rank.txt")
-    with io.open(path, "w") as f:
-        f.write(str(settings["CurrentRank"]))
-
-    path = os.path.join(topdir, "Stats\highest_rank.txt")
-    with io.open(path, "w") as f:
-        f.write(str(settings["CurrentRank"]))
-
-    path = os.path.join(topdir, "Stats\collection_level.txt")
-    with io.open(path, "w") as f:
-        f.write(str(settings["CollectionLevel"]))
-
-    path = os.path.join(topdir, "Stats\current_rank_cubes.txt")
-    with io.open(path, "w") as f:
-        f.write(str(settings["RankCubes"]))
-
     return
 
 # Reload/Save Settings
 def ReloadSettings(jsonData):
-    Init()
+
     Save()
+    Init()
 
     return
 
@@ -167,4 +202,8 @@ def Unload():
 
 # Script Toggle
 def ScriptToggled(state):
+
+    if state:
+        Init()
+
     return
