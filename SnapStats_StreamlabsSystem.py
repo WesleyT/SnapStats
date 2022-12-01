@@ -13,7 +13,8 @@ Version = "1.0"
 
 settingsFile = "settings.json"
 settings = {}
-topdir = os.path.dirname(__file__)
+topdir = os.path.dirname(__file__) 
+
 
 # Initialize  
 def Init():
@@ -32,6 +33,15 @@ def Init():
             "Username": ""
             }
 
+    global CurrentRank
+    CurrentRank = settings["CurrentRank"] 
+    global HighestRank
+    HighestRank = settings["HighestRank"]
+    global CollectionLevel
+    CollectionLevel = settings["CollectionLevel"]
+    global RankCubes
+    RankCubes = settings["RankCubes"]
+
     #   Create Stats Directory
     directory = os.path.join(topdir, "Stats")
     if not os.path.exists(directory):
@@ -40,19 +50,19 @@ def Init():
     #   Create Stats Files
     path = os.path.join(topdir, "Stats\current_rank.txt")
     with io.open(path, "w") as f:
-        f.write(str(settings["CurrentRank"]))
+        f.write(str(CurrentRank))
 
     path = os.path.join(topdir, "Stats\highest_rank.txt")
     with io.open(path, "w") as f:
-        f.write(str(settings["HighestRank"]))
+        f.write(str(HighestRank))
 
     path = os.path.join(topdir, "Stats\collection_level.txt")
     with io.open(path, "w") as f:
-        f.write(str(settings["CollectionLevel"]))
+        f.write(str(CollectionLevel))
 
     path = os.path.join(topdir, "Stats\current_rank_cubes.txt")
     with io.open(path, "w") as f:
-        f.write(str(settings["RankCubes"]))
+        f.write(str(RankCubes))
 
     path = os.path.join(topdir, "Stats\cubes_today.txt")
     if not os.path.exists(path):
@@ -73,8 +83,38 @@ def Init():
 
 # Execute Data
 def Execute(data):
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!thistest" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
-        Parent.SendStreamMessage("has worked")    # Send your message to chat
+    # Collection level !cl followed by a number
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!cl" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            commandsplit = data.Message.split(" ")
+            CollectionLevel = int(commandsplit[1])
+            path = os.path.join(topdir, "Stats\collection_level.txt")
+            with io.open(path, "w") as f:
+                f.write(str(CollectionLevel))
+            Parent.SendStreamMessage("Collection level updated")
+
+        except:
+            Parent.SendStreamMessage("Failed to set collection level")
+
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!snapreset" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            path = os.path.join(topdir, "Stats\cubes_today.txt")
+            with io.open(path, "w") as f:
+                f.write("0")
+
+            path = os.path.join(topdir, "Stats\wins.txt")
+            with io.open(path, "w") as f:
+                f.write("0")
+
+            path = os.path.join(topdir, "Stats\losses.txt")
+            with io.open(path, "w") as f:
+                f.write("0")
+
+            Parent.SendStreamMessage("Daily Snap stats reset")
+
+        except:
+            Parent.SendStreamMessage("Reset failed")
+
     return
 
 # Tick method 
@@ -93,9 +133,6 @@ def Parse(parseString, userid, username, targetid, targetname, message):
 # Reload/Save Settings
 def ReloadSettings(jsonData):
     Init()
-    
-    Parent.Log(ScriptName, str(settings["CurrentRank"]))
-
         
     return
 
