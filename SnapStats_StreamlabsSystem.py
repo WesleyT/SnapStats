@@ -22,14 +22,15 @@ def Init():
         with io.open(os.path.join(topdir, settingsFile), encoding="utf-8-sig", mode="r") as f:
             settings = json.load(f, encoding="utf-8-sig")
     except:
-        settings = {
-            "CurrentRank": 10,
-            "RankCubes": 0,
-            "HighestRank": 10,
-            "CollectionLevel": 50,
-            "Permission": "Moderator",
-            "Username": ""
-            }
+        pass
+#        settings = {
+#            "CurrentRank": 10,
+#            "RankCubes": 0,
+#            "HighestRank": 10,
+#            "CollectionLevel": 50,
+#            "Permission": "Moderator",
+#            "Username": ""
+#            }
 
     #   Create Stats Directory
     directory = os.path.join(topdir, "Stats")
@@ -38,6 +39,8 @@ def Init():
 
     #   Create Stats Files with default or entered settings (will not overwrite)
     #   Also creates global variables while checking if files are created
+    #       This is to ensure global variables arent over written on accidental script reset
+    #       Only pressing save settings or initial launch will rewrite files with whats typed in
     path = os.path.join(topdir, "Stats\current_rank.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
@@ -45,7 +48,6 @@ def Init():
     with io.open(path, "r") as f:
         global CurrentRank
         CurrentRank = int(f.read())
-    Parent.Log(ScriptName,"Rank is set at "+str(CurrentRank))
     
     path = os.path.join(topdir, "Stats\highest_rank.txt")
     if not os.path.exists(path):
@@ -54,7 +56,6 @@ def Init():
     with io.open(path, "r") as f:
         global HighestRank
         HighestRank = int(f.read())
-    Parent.Log(ScriptName,"Highest Rank is set at "+str(HighestRank))
 
     path = os.path.join(topdir, "Stats\collection_level.txt")
     if not os.path.exists(path):
@@ -63,7 +64,6 @@ def Init():
     with io.open(path, "r") as f:
         global CollectionLevel
         CollectionLevel = int(f.read())
-    Parent.Log(ScriptName,"Collection Level is set at "+str(CollectionLevel))
 
     path = os.path.join(topdir, "Stats\current_rank_cubes.txt")
     if not os.path.exists(path):
@@ -71,35 +71,31 @@ def Init():
             f.write(str(settings["RankCubes"]))
     with io.open(path, "r") as f:
         global RankCubes
-        RankCubes = int(f.read())
-    Parent.Log(ScriptName,"Cubes in current rank is set at "+str(RankCubes))
+        RankCubes = int(float(f.read()))
 
     path = os.path.join(topdir, "Stats\cubes_today.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
-            f.write("0")
+            f.write(str(settings["CubesToday"]))
     with io.open(path, "r") as f:
         global CubesToday
         CubesToday = int(f.read())
-    Parent.Log(ScriptName,"Cubes Today is set at "+str(CubesToday))
 
     path = os.path.join(topdir, "Stats\wins.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
-            f.write("0")
+            f.write(str(settings["Wins"]))
     with io.open(path, "r") as f:
         global Wins
         Wins = int(f.read())
-    Parent.Log(ScriptName,"Wins is set at "+str(Wins))
 
     path = os.path.join(topdir, "Stats\losses.txt")
     if not os.path.exists(path):
         with io.open(path, "w") as f:
-            f.write("0")
+            f.write(str(settings["Losses"]))
     with io.open(path, "r") as f:
         global Losses
         Losses = int(f.read())
-    Parent.Log(ScriptName,"Losses is set at "+str(Losses))
 
     return
 
@@ -114,22 +110,16 @@ def Execute(data):
     global Wins
     global Losses
     global RankCubes
-    global LastCommand
 
-    #Backups for undo
+    #Backup variables
     global OldCubesToday
-    
     global OldCurrentRank
-    
     global OldCollectionLevel
-    
     global OldHighestRank
-    
     global OldWins
-    
     global OldLosses
-    
     global OldRankCubes
+    global LastCommand
 
     # Collection level !cl followed by a number
     if data.IsChatMessage() and data.GetParam(0).lower() == "!cl" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
@@ -216,7 +206,8 @@ def Execute(data):
                 # Check for rank down/remove cubes and/or rank
                 if RankCubes - msgAmount < 0:
                     RankCubes = RankCubes - msgAmount + 10
-                    CurrentRank -= 1
+                    if CurrentRank != 10 or CurrentRank != 100:
+                        CurrentRank -= 1
                 else:
                     RankCubes -= msgAmount
                     
@@ -250,7 +241,6 @@ def Execute(data):
     if data.IsChatMessage() and data.GetParam(0).lower() == "!undo" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             Undo()
-
             #saves changes
             Write()
             LastCommand = " "
@@ -289,7 +279,7 @@ def Undo():
         HighestRank = OldHighestRank
         RankCubes = OldRankCubes
 
-    if LastCommand.GetParam(0).lower() == "!cubes":
+    if LastCommand.GetParam(0).lower() == "!cubes-":
         CubesToday = OldCubesToday
         Losses = OldLosses
         CurrentRank = OldCurrentRank
@@ -343,21 +333,27 @@ def Write():
     return
 
 # Saves currently entered values to stats
-def Save():
+def SaveStats():
     global CurrentRank
     global HighestRank
     global CollectionLevel
     global RankCubes
     global settings
+    global Wins
+    global Losses
+    global CubesToday
 
     try:
         with io.open(os.path.join(topdir, settingsFile), encoding="utf-8-sig", mode="r") as f:
             settings = json.load(f, encoding="utf-8-sig")
 
-        CurrentRank = settings["CurrentRank"]
-        HighestRank = settings["HighestRank"]
-        CollectionLevel = settings["CollectionLevel"]
-        RankCubes = settings["RankCubes"]
+        CurrentRank = int(settings["CurrentRank"])
+        HighestRank = int(settings["HighestRank"])
+        CollectionLevel = int(settings["CollectionLevel"])
+        RankCubes = int(float(settings["RankCubes"]))
+        Wins = int(settings["Wins"])
+        Losses = int(settings["Losses"])
+        CubesToday = int(settings["CubesToday"])
         Write()
 
     except:
@@ -368,7 +364,7 @@ def Save():
 # Reload/Save Settings
 def ReloadSettings(jsonData):
 
-    Save()
+    SaveStats()
     Init()
 
     return
@@ -409,3 +405,9 @@ def ScriptToggled(state):
         Init()
 
     return
+
+# Readme
+def ReadMe():
+	info = os.path.join(topdir, "README.txt")
+	os.startfile(info)
+	return

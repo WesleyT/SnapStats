@@ -1,46 +1,78 @@
 {
     "output_file": "settings.json",
-    "CurrentRank": {
-      "type": "textbox",
-      "value": 10,
-      "label": "Current Rank",
-      "tooltip": "Your current rank in Snap",
-      "group": "Core"
-    },
-    "RankCubes": {
-      "type": "textbox",
-      "value": 0,
-      "label": "Current Cubes",
-      "tooltip": "The ammount of cubes in your current rank",
-      "group": "Core"
-    },
-    "HighestRank": {
-      "type": "textbox",
-      "value": 10,
-      "label": "Highest Rank",
-      "tooltip": "Your highest rank this season",
-      "group": "Core"
-    },
     "CollectionLevel": {
-      "type": "textbox",
-      "value": 50,
+      "type": "numberbox",
+      "value": 100,
       "label": "Collection Level",
       "tooltip": "Your collection level",
-      "group": "Core"
+      "group": "Stats"
+    },
+    "CurrentRank": {
+      "type": "numberbox",
+      "value": 20,
+      "label": "Current Rank",
+      "tooltip": "Your current rank in Snap",
+      "group": "Stats"
+    },
+    "RankCubes": {
+      "type": "slider",
+      "label": "Current Rank Cubes",
+      "value": 0,
+      "min": 0,
+      "max": 9,
+      "ticks": 1,
+      "tooltip": "How many cubes in your current Rank",
+      "group": "Stats"
+    },
+    "HighestRank": {
+      "type": "numberbox",
+      "value": 20,
+      "label": "Highest Season Rank",
+      "tooltip": "Your highest rank this season",
+      "group": "Stats"
+    },
+    "Wins": {
+      "type": "numberbox",
+      "value": 1,
+      "label": "Today's Wins",
+      "tooltip": "How many Wins today",
+      "group": "Daily Stats"
+    },
+    "Losses": {
+      "type": "numberbox",
+      "value": 1,
+      "label": "Today's Losses",
+      "tooltip": "How many Losses today",
+      "group": "Daily Stats"
+    },
+    "CubesToday": {
+      "type": "textbox",
+      "value": 1,
+      "label": "Today's Cubes",
+      "tooltip": "How many Cubes today",
+      "group": "Daily Stats"
     },
     "Permission": {
       "type": "dropdown",
       "value": "moderator",
       "items": ["everyone","moderator","subscriber","user_specific","editor"],
-      "label": "Permission",
+      "label": "Command Permission",
       "tooltip": "Who is able to use the commands",
-      "group": "Core"
+      "group": "Commands"
     },
     "Username": {
       "type": "textbox",
       "value": "",
       "label": "Username",
       "tooltip": "This field should only be filled when using the user_specific permission.",
-      "group": "Core"
+      "group": "Commands"
+    },
+    "ReadMe": {
+      "type": "button",
+      "label": "Info",
+      "tooltip": "Opens Readme.txt",
+      "function": "ReadMe",
+      "wsevent": "",
+      "group": ""
     }
   }
