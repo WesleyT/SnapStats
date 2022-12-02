@@ -372,7 +372,20 @@ def Undo():
         CurrentRank = OldCurrentRank
         HighestRank = OldHighestRank
         RankCubes = OldRankCubes
-        
+    
+    if LastCommand.GetParam(0).lower() == "!rank":
+        CurrentRank = OldCurrentRank
+        RankCubes = OldRankCubes
+    
+    if LastCommand.GetParam(0).lower() == "!cubes":
+        CubesToday = OldCubesToday
+    
+    if LastCommand.GetParam(0).lower() == "!wins":
+        Wins = OldWins
+    
+    if LastCommand.GetParam(0).lower() == "!losses":
+        Losses = OldLosses
+
     return
 
 # Tick method 
