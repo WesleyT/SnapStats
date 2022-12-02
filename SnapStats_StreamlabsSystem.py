@@ -116,53 +116,82 @@ def Execute(data):
     global Wins
     global Losses
     global RankCubes
+    global LastCommand
+
+    #Backups for undo
+    global OldCubesToday
+    
+    global OldCurrentRank
+    
+    global OldCollectionLevel
+    
+    global OldHighestRank
+    
+    global OldWins
+    
+    global OldLosses
+    
+    global OldRankCubes
 
     # Collection level !cl followed by a number
     if data.IsChatMessage() and data.GetParam(0).lower() == "!cl" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
+            #Verifys an interger follows
             commandsplit = data.Message.split(" ")
-            CollectionLevel = int(commandsplit[1])
-            path = os.path.join(topdir, "Stats\collection_level.txt")
-            with io.open(path, "w") as f:
-                f.write(str(CollectionLevel))
+            msgAmount = int(commandsplit[1])
+            #backup
+            OldCollectionLevel = CollectionLevel
+
+            #set collection level
+            CollectionLevel = msgAmount
+
+            Write()
+            LastCommand = data
             Parent.SendStreamMessage("Collection level updated")
 
         except:
             Parent.SendStreamMessage("Failed to set collection level")
 
-    # Reset command !snapreset resets daily cubes, wins, and losses
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!snapreset" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
-        try:
-            Reset()
-            Parent.SendStreamMessage("Daily Snap stats reset")
-
-        except:
-            Parent.SendStreamMessage("Reset failed")
-
     # Cubes added
     if data.IsChatMessage() and data.GetParam(0).lower() == "!cubes+" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
+            #Verifys an interger follows
             commandsplit = data.Message.split(" ") 
-            CubesToday += int(commandsplit[1])
-            Wins += 1
+            msgAmount = int(commandsplit[1])
+            if msgAmount == 1 or msgAmount == 2 or msgAmount == 4 or msgAmount == 8:
+                #backup
+                OldRankCubes = RankCubes
+                OldCurrentRank = CurrentRank
+                OldHighestRank = HighestRank
+                OldCubesToday = CubesToday
+                OldWins = Wins
 
-            # Check for rank up
-            if RankCubes + int(commandsplit[1]) >= 10:
-                RankCubes = RankCubes + int(commandsplit[1]) - 10
-                CurrentRank += 1
-            else:
-                RankCubes += int(commandsplit[1])
+                # Increase cubes and win
+                CubesToday += msgAmount
+                Wins += 1
+
+                # Check for rank up/add cubes and/or rank
+                if RankCubes + msgAmount >= 10:
+                    RankCubes = RankCubes + msgAmount - 10
+                    CurrentRank += 1
+                else:
+                    RankCubes += msgAmount
+                
+                # Check for new rank category
+                if CurrentRank > HighestRank:
+                    HighestRank = CurrentRank
+                    if HighestRank % 10 == 0:
+                        CurrentRank +=1
+                        HighestRank +=1
+
+                # saves changes
+                Write()
+                LastCommand = data
+
+                Parent.SendStreamMessage("Stats updated")
             
-            # Check for new rank category
-            if CurrentRank > HighestRank:
-                HighestRank = CurrentRank
-                if HighestRank % 10 == 0:
-                    CurrentRank +=1
-                    HighestRank +=1
-
-            Write()
-
-            Parent.SendStreamMessage("Stats updated")
+            else:
+                Parent.SendStreamMessage("Not a Valid number")
 
         except:
             Parent.SendStreamMessage("Failed to update stats")
@@ -170,25 +199,107 @@ def Execute(data):
     # Cubes removed
     if data.IsChatMessage() and data.GetParam(0).lower() == "!cubes-" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
+            #Verifys an interger follows
             commandsplit = data.Message.split(" ") 
-            CubesToday -= int(commandsplit[1])
-            Losses += 1
-
-            # Check for rank up
-            if RankCubes - int(commandsplit[1]) < 0:
-                RankCubes = RankCubes - int(commandsplit[1]) + 10
-                CurrentRank -= 1
-            else:
-                RankCubes -= int(commandsplit[1])
-                
-            Write()
+            msgAmount = int(commandsplit[1])
+            if msgAmount == 1 or msgAmount == 2 or msgAmount == 4 or msgAmount == 8:
             
-            Parent.SendStreamMessage("Stats updated")
+                #backup
+                OldRankCubes = RankCubes
+                OldCurrentRank = CurrentRank
+                OldHighestRank = HighestRank
+                OldCubesToday = CubesToday
+                OldLosses = Losses
+                
+                #decreases cubes and losses
+                CubesToday -= msgAmount
+                Losses += 1
+
+                # Check for rank down/remove cubes and/or rank
+                if RankCubes - msgAmount < 0:
+                    RankCubes = RankCubes - msgAmount + 10
+                    CurrentRank -= 1
+                else:
+                    RankCubes -= msgAmount
+                    
+                #saves changes
+                Write()
+                LastCommand = data
+
+                Parent.SendStreamMessage("Stats updated")
+            else:
+                Parent.SendStreamMessage("Not a Valid number")
 
         except:
             Parent.SendStreamMessage("Failed to update stats")
 
+    # Reset command !snapreset resets daily cubes, wins, and losses
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!snapreset" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        #backup
+        OldCubesToday = CubesToday
+        OldLosses = Losses
+        OldWins = Wins
+        
+        try:
+            Reset()
+            LastCommand = data
+            Parent.SendStreamMessage("Daily Snap stats reset")
+
+        except:
+            Parent.SendStreamMessage("Reset failed")
+
+    # Undo
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!undo" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            Undo()
+
+            #saves changes
+            Write()
+            LastCommand = " "
+
+            Parent.SendStreamMessage("Last SnapStats action undone")
+
+        except:
+            Parent.SendStreamMessage("Couldn't undo")
+    
     return
+
+# Undo method
+def Undo():
+    #global variables
+    global CubesToday
+    global CurrentRank
+    global CollectionLevel
+    global HighestRank
+    global Wins
+    global Losses
+    global RankCubes
+    global LastCommand
+
+    if LastCommand.GetParam(0).lower() == "!cl":
+        CollectionLevel = OldCollectionLevel
+
+    if LastCommand.GetParam(0).lower() == "!snapreset":
+        CubesToday = OldCubesToday
+        Wins = OldWins
+        Losses = OldLosses
+    
+    if LastCommand.GetParam(0).lower() == "!cubes+":
+        CubesToday = OldCubesToday
+        Wins = OldWins
+        CurrentRank = OldCurrentRank
+        HighestRank = OldHighestRank
+        RankCubes = OldRankCubes
+
+    if LastCommand.GetParam(0).lower() == "!cubes":
+        CubesToday = OldCubesToday
+        Losses = OldLosses
+        CurrentRank = OldCurrentRank
+        HighestRank = OldHighestRank
+        RankCubes = OldRankCubes
+        
+    return
+
 # Tick method 
 def Tick():
     return
@@ -286,6 +397,8 @@ def Reset():
     Losses = 0
 
     return
+
+
 
 # Unload
 def Unload():
