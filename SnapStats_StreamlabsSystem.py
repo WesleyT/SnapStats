@@ -107,8 +107,17 @@ def Init():
 
 # Execute Data
 def Execute(data):
-    # Collection level !cl followed by a number
     
+    #global variables
+    global CubesToday
+    global CurrentRank
+    global CollectionLevel
+    global HighestRank
+    global Wins
+    global Losses
+    global RankCubes
+
+    # Collection level !cl followed by a number
     if data.IsChatMessage() and data.GetParam(0).lower() == "!cl" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             commandsplit = data.Message.split(" ")
@@ -130,8 +139,56 @@ def Execute(data):
         except:
             Parent.SendStreamMessage("Reset failed")
 
-    return
+    # Cubes added
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!cubes+" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            commandsplit = data.Message.split(" ") 
+            CubesToday += int(commandsplit[1])
+            Wins += 1
 
+            # Check for rank up
+            if RankCubes + int(commandsplit[1]) >= 10:
+                RankCubes = RankCubes + int(commandsplit[1]) - 10
+                CurrentRank += 1
+            else:
+                RankCubes += int(commandsplit[1])
+            
+            # Check for new rank category
+            if CurrentRank > HighestRank:
+                HighestRank = CurrentRank
+                if HighestRank % 10 == 0:
+                    CurrentRank +=1
+                    HighestRank +=1
+
+            Write()
+
+            Parent.SendStreamMessage("Stats updated")
+
+        except:
+            Parent.SendStreamMessage("Failed to update stats")
+
+    # Cubes removed
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!cubes-" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            commandsplit = data.Message.split(" ") 
+            CubesToday -= int(commandsplit[1])
+            Losses += 1
+
+            # Check for rank up
+            if RankCubes - int(commandsplit[1]) < 0:
+                RankCubes = RankCubes - int(commandsplit[1]) + 10
+                CurrentRank -= 1
+            else:
+                RankCubes -= int(commandsplit[1])
+                
+            Write()
+            
+            Parent.SendStreamMessage("Stats updated")
+
+        except:
+            Parent.SendStreamMessage("Failed to update stats")
+
+    return
 # Tick method 
 def Tick():
     return
@@ -144,28 +201,55 @@ def Parse(parseString, userid, username, targetid, targetname, message):
     
     return parseString
 
+def Write():
+    # Write new stats to files
+    path = os.path.join(topdir, "Stats\cubes_today.txt")
+    with io.open(path, "w") as f:
+        f.write(str(CubesToday))
+
+    path = os.path.join(topdir, "Stats\current_rank_cubes.txt")
+    with io.open(path, "w") as f:
+        f.write(str(RankCubes))
+
+    path = os.path.join(topdir, "Stats\collection_level.txt")
+    with io.open(path, "w") as f:
+        f.write(str(CollectionLevel))
+
+    path = os.path.join(topdir, "Stats\current_rank.txt")
+    with io.open(path, "w") as f:
+        f.write(str(CurrentRank))
+
+    path = os.path.join(topdir, "Stats\highest_rank.txt")
+    with io.open(path, "w") as f:
+        f.write(str(HighestRank))
+
+    path = os.path.join(topdir, "Stats\wins.txt")
+    with io.open(path, "w") as f:
+        f.write(str(Wins))
+
+    path = os.path.join(topdir, "Stats\losses.txt")
+    with io.open(path, "w") as f:
+        f.write(str(Losses))     
+
+    return
+
 # Saves currently entered values to stats
 def Save():
+    global CurrentRank
+    global HighestRank
+    global CollectionLevel
+    global RankCubes
+    global settings
 
     try:
         with io.open(os.path.join(topdir, settingsFile), encoding="utf-8-sig", mode="r") as f:
             settings = json.load(f, encoding="utf-8-sig")
 
-        path = os.path.join(topdir, "Stats\current_rank.txt")
-        with io.open(path, "w") as f:
-            f.write(str(settings["CurrentRank"]))
-
-        path = os.path.join(topdir, "Stats\highest_rank.txt")
-        with io.open(path, "w") as f:
-            f.write(str(settings["HighestRank"]))
-
-        path = os.path.join(topdir, "Stats\collection_level.txt")
-        with io.open(path, "w") as f:
-            f.write(str(settings["CollectionLevel"]))
-
-        path = os.path.join(topdir, "Stats\current_rank_cubes.txt")
-        with io.open(path, "w") as f:
-            f.write(str(settings["RankCubes"]))
+        CurrentRank = settings["CurrentRank"]
+        HighestRank = settings["HighestRank"]
+        CollectionLevel = settings["CollectionLevel"]
+        RankCubes = settings["RankCubes"]
+        Write()
 
     except:
         Parent.Log(ScriptName, "Save Failed")
@@ -182,17 +266,24 @@ def ReloadSettings(jsonData):
 
 # Resets daily stats
 def Reset():
+    global CubesToday
+    global Wins
+    global Losses
+
     path = os.path.join(topdir, "Stats\cubes_today.txt")
     with io.open(path, "w") as f:
         f.write("0")
+    CubesToday = 0
 
     path = os.path.join(topdir, "Stats\wins.txt")
     with io.open(path, "w") as f:
         f.write("0")
+    Wins = 0
 
     path = os.path.join(topdir, "Stats\losses.txt")
     with io.open(path, "w") as f:
         f.write("0")    
+    Losses = 0
 
     return
 
