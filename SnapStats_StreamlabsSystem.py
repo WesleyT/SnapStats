@@ -1,8 +1,6 @@
 import os
-import sys
 import json
 import io
-import clr
 
 #Script Info
 ScriptName = "Snap Stats"
