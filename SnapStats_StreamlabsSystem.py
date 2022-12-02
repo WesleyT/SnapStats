@@ -23,14 +23,17 @@ def Init():
             settings = json.load(f, encoding="utf-8-sig")
     except:
         pass
-#        settings = {
-#            "CurrentRank": 10,
-#            "RankCubes": 0,
-#            "HighestRank": 10,
-#            "CollectionLevel": 50,
-#            "Permission": "Moderator",
-#            "Username": ""
-#            }
+        settings = {
+            "CurrentRank": 10,
+            "RankCubes": 0,
+            "HighestRank": 10,
+            "CollectionLevel": 50,
+            "Permission": "Moderator",
+            "Username": "",
+            "Wins": 0,
+            "Losses": 0,
+            "Cubes": 0
+            }
 
     #   Create Stats Directory
     directory = os.path.join(topdir, "Stats")
@@ -127,6 +130,7 @@ def Execute(data):
             #Verifys an interger follows
             commandsplit = data.Message.split(" ")
             msgAmount = int(commandsplit[1])
+            
             #backup
             OldCollectionLevel = CollectionLevel
 
@@ -139,6 +143,89 @@ def Execute(data):
 
         except:
             Parent.SendStreamMessage("Failed to set collection level")
+
+    # Rank !rank followed by a number
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!rank" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            #Verifys an interger follows
+            commandsplit = data.Message.split(" ")
+            msgAmount1 = int(commandsplit[1])
+            if 0 <= int(commandsplit[2]) <= 9:
+                msgAmount2 = int(commandsplit[2])
+            
+            #backup
+            OldCurrentRank = CurrentRank
+            OldRankCubes = RankCubes
+
+            #set rank and cubes
+            CurrentRank = msgAmount1
+            RankCubes = msgAmount2
+
+            Write()
+            LastCommand = data
+            Parent.SendStreamMessage("Rank updated")
+
+        except:
+            Parent.SendStreamMessage("Failed to set rank")
+
+    # Wins !wins followed by a number
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!wins" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            #Verifys an interger follows
+            commandsplit = data.Message.split(" ")
+            msgAmount = int(commandsplit[1])
+            #backup
+            OldWins = Wins
+
+            #set wins
+            Wins = msgAmount
+
+            Write()
+            LastCommand = data
+            Parent.SendStreamMessage("Wins updated")
+
+        except:
+            Parent.SendStreamMessage("Failed to set wins")
+
+    # Losses !losses followed by a number
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!losses" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            #Verifys an interger follows
+            commandsplit = data.Message.split(" ")
+            msgAmount = int(commandsplit[1])
+            
+            #backup
+            OldLosses = Losses
+
+            #set losses
+            Losses = msgAmount
+
+            Write()
+            LastCommand = data
+            Parent.SendStreamMessage("Losses updated")
+
+        except:
+            Parent.SendStreamMessage("Failed to set losses")
+
+    # Todays cubes !cubes followed by a number
+    if data.IsChatMessage() and data.GetParam(0).lower() == "!cubes" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            #Verifys an interger follows
+            commandsplit = data.Message.split(" ")
+            msgAmount = int(commandsplit[1])
+            
+            #backup
+            OldCubesToday = CubesToday
+
+            #set cubes
+            CubesToday = msgAmount
+
+            Write()
+            LastCommand = data
+            Parent.SendStreamMessage("Cubes updated")
+
+        except:
+            Parent.SendStreamMessage("Failed to set cubes")
 
     # Cubes added
     if data.IsChatMessage() and data.GetParam(0).lower() == "!cubes+" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
@@ -363,10 +450,8 @@ def SaveStats():
 
 # Reload/Save Settings
 def ReloadSettings(jsonData):
-
     SaveStats()
     Init()
-
     return
 
 # Resets daily stats
@@ -400,10 +485,8 @@ def Unload():
 
 # Script Toggle
 def ScriptToggled(state):
-
     if state:
         Init()
-
     return
 
 # Readme
