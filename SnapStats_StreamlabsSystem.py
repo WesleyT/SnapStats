@@ -1,6 +1,7 @@
 import os
 import json
 import io
+import math
 
 #Script Info
 ScriptName = "Snap Stats"
@@ -234,6 +235,47 @@ def Execute(data):
         except:
             Parent.SendStreamMessage("Failed to set cubes")
 
+    # Highestrank (for fixes only)
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!hrank" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            #Verifys an interger follows
+            commandsplit = data.Message.split(" ")
+            msgAmount = int(commandsplit[1])
+            
+            #backup
+            OldHighestRank = HighestRank
+
+            #set losses
+            HighestRank = msgAmount
+
+            Write()
+            LastCommand = data
+            UndidCommand = " "
+            Parent.SendStreamMessage("Highest Rank updated")
+
+        except:
+            Parent.SendStreamMessage("Failed to set Highest Rank")
+
+    # New season
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!newseason" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+        try:
+            #backup
+            OldHighestRank = HighestRank
+            OldCurrentRank = CurrentRank
+
+            CurrentRank = math.trunc(math.floor((CurrentRank - 30) / 10) * 10)
+            if CurrentRank < 10:
+                CurrentRank = 10
+            HighestRank = CurrentRank
+
+            Write()
+            LastCommand = data
+            UndidCommand = " "
+            Parent.SendStreamMessage("New snap season! rank updated")
+
+        except:
+            Parent.SendStreamMessage("Failed to set rank")
+
     # Cubes added
     elif data.IsChatMessage() and data.GetParam(0).lower() == "!cubes+" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
@@ -406,6 +448,13 @@ def Undo():
     elif LastCommand.GetParam(0).lower() == "!losses":
         Losses = OldLosses
         UndidCommand = LastCommand
+
+    elif LastCommand.GetParam(0).lower() == "!newseason":
+        HighestRank = OldHighestRank
+        CurrentRank = OldCurrentRank
+
+    elif LastCommand.GetParam(0).lower() == "!hrank":
+        HighestRank = OldHighestRank 
 
     return
 

@@ -58,6 +58,10 @@ To reset them each day
 !snapreset
 This will bring Wins, Losses, and Cubes Today to 0
 
+NEW SEASON
+The highest rank is calculated for cube gains.
+Make sure to tell the bot when there is a new season using
+!newseason
 
 FIXES
 If something goes wrong and !undo cant fix it.
@@ -73,3 +77,5 @@ Where # # is the current rank and cubes in that rank
 Ex
 !rank 89 8
 Would set a rank of 89 with 8 cubes
+!hrank #
+Where # is the highest rank you have reached this season
