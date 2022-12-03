@@ -25,15 +25,15 @@ def Init():
     except:
         pass
         settings = {
+            "CollectionLevel": 50,
             "CurrentRank": 10,
             "RankCubes": 0,
             "HighestRank": 10,
-            "CollectionLevel": 50,
-            "Permission": "Moderator",
-            "Username": "",
             "Wins": 0,
             "Losses": 0,
-            "Cubes": 0
+            "CubesToday": 0,
+            "Permission": "Moderator",
+            "Username": ""
             }
 
     #   Create Stats Directory

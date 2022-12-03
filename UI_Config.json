@@ -17,7 +17,7 @@
     "RankCubes": {
       "type": "slider",
       "label": "Current Rank Cubes",
-      "value": 0,
+      "value": 1,
       "min": 0,
       "max": 9,
       "ticks": 1,
