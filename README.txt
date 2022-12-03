@@ -4,6 +4,27 @@
 			  v 1.0
 ===================================================================
 
+SETUP
+
+Follow streamlabs guide to setup scripts in Streamlabs Chatbot.
+https://streamlabs.com/content-hub/post/chatbot-scripts-desktop
+
+Import this script
+(in scripts tab, top right corner, second icon)
+
+Set your current stats
+
+Create live text in OBS or a static image with the titles of each 
+stat you want to display.
+I have included a shitty paint example.
+
+Then for each stat you want to display in obs add a text source
+and link it to the .txt file in the Stats folder.
+
+---------
+COMMANDS
+---------
+
 UNDO
 Any command here can be undone with
 !undo
