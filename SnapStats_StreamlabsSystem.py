@@ -123,7 +123,9 @@ def Execute(data):
     global OldLosses
     global OldRankCubes
     global LastCommand
+    global UndidCommand
 
+    
     # Collection level !cl followed by a number
     if data.IsChatMessage() and data.GetParam(0).lower() == "!cl" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
@@ -139,13 +141,14 @@ def Execute(data):
 
             Write()
             LastCommand = data
+            UndidCommand = " "
             Parent.SendStreamMessage("Collection level updated")
 
         except:
             Parent.SendStreamMessage("Failed to set collection level")
 
     # Rank !rank followed by a number
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!rank" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!rank" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
             commandsplit = data.Message.split(" ")
@@ -163,13 +166,14 @@ def Execute(data):
 
             Write()
             LastCommand = data
+            UndidCommand = " "
             Parent.SendStreamMessage("Rank updated")
 
         except:
             Parent.SendStreamMessage("Failed to set rank")
 
     # Wins !wins followed by a number
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!wins" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!wins" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
             commandsplit = data.Message.split(" ")
@@ -182,13 +186,14 @@ def Execute(data):
 
             Write()
             LastCommand = data
+            UndidCommand = " "
             Parent.SendStreamMessage("Wins updated")
 
         except:
             Parent.SendStreamMessage("Failed to set wins")
 
     # Losses !losses followed by a number
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!losses" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!losses" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
             commandsplit = data.Message.split(" ")
@@ -202,13 +207,14 @@ def Execute(data):
 
             Write()
             LastCommand = data
+            UndidCommand = " "
             Parent.SendStreamMessage("Losses updated")
 
         except:
             Parent.SendStreamMessage("Failed to set losses")
 
     # Todays cubes !cubes followed by a number
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!cubes" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!cubes" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
             commandsplit = data.Message.split(" ")
@@ -222,13 +228,14 @@ def Execute(data):
 
             Write()
             LastCommand = data
+            UndidCommand = " "
             Parent.SendStreamMessage("Cubes updated")
 
         except:
             Parent.SendStreamMessage("Failed to set cubes")
 
     # Cubes added
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!cubes+" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!cubes+" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
             commandsplit = data.Message.split(" ") 
@@ -261,6 +268,7 @@ def Execute(data):
 
                 # saves changes
                 Write()
+                UndidCommand = " "
                 LastCommand = data
 
                 Parent.SendStreamMessage("Stats updated")
@@ -272,7 +280,7 @@ def Execute(data):
             Parent.SendStreamMessage("Failed to update stats")
 
     # Cubes removed
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!cubes-" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!cubes-" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
             commandsplit = data.Message.split(" ") 
@@ -300,6 +308,7 @@ def Execute(data):
                     
                 #saves changes
                 Write()
+                UndidCommand = " "
                 LastCommand = data
 
                 Parent.SendStreamMessage("Stats updated")
@@ -310,7 +319,7 @@ def Execute(data):
             Parent.SendStreamMessage("Failed to update stats")
 
     # Reset command !snapreset resets daily cubes, wins, and losses
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!snapreset" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!snapreset" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         #backup
         OldCubesToday = CubesToday
         OldLosses = Losses
@@ -318,6 +327,7 @@ def Execute(data):
         
         try:
             Reset()
+            UndidCommand = " "
             LastCommand = data
             Parent.SendStreamMessage("Daily Snap stats reset")
 
@@ -325,12 +335,11 @@ def Execute(data):
             Parent.SendStreamMessage("Reset failed")
 
     # Undo
-    if data.IsChatMessage() and data.GetParam(0).lower() == "!undo" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
+    elif data.IsChatMessage() and data.GetParam(0).lower() == "!undo" and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             Undo()
             #saves changes
             Write()
-            LastCommand = " "
 
             Parent.SendStreamMessage("Last SnapStats action undone")
 
@@ -350,41 +359,53 @@ def Undo():
     global Losses
     global RankCubes
     global LastCommand
+    global UndidCommand
 
-    if LastCommand.GetParam(0).lower() == "!cl":
+    if UndidCommand != " ":
+        Execute(UndidCommand)
+
+    elif LastCommand.GetParam(0).lower() == "!cl":
         CollectionLevel = OldCollectionLevel
+        UndidCommand = LastCommand
 
-    if LastCommand.GetParam(0).lower() == "!snapreset":
+    elif LastCommand.GetParam(0).lower() == "!snapreset":
         CubesToday = OldCubesToday
         Wins = OldWins
         Losses = OldLosses
+        UndidCommand = LastCommand
     
-    if LastCommand.GetParam(0).lower() == "!cubes+":
+    elif LastCommand.GetParam(0).lower() == "!cubes+":
         CubesToday = OldCubesToday
         Wins = OldWins
         CurrentRank = OldCurrentRank
         HighestRank = OldHighestRank
         RankCubes = OldRankCubes
+        UndidCommand = LastCommand
 
-    if LastCommand.GetParam(0).lower() == "!cubes-":
+    elif LastCommand.GetParam(0).lower() == "!cubes-":
         CubesToday = OldCubesToday
         Losses = OldLosses
         CurrentRank = OldCurrentRank
         HighestRank = OldHighestRank
         RankCubes = OldRankCubes
+        UndidCommand = LastCommand
     
-    if LastCommand.GetParam(0).lower() == "!rank":
+    elif LastCommand.GetParam(0).lower() == "!rank":
         CurrentRank = OldCurrentRank
         RankCubes = OldRankCubes
+        UndidCommand = LastCommand
     
-    if LastCommand.GetParam(0).lower() == "!cubes":
+    elif LastCommand.GetParam(0).lower() == "!cubes":
         CubesToday = OldCubesToday
+        UndidCommand = LastCommand
     
-    if LastCommand.GetParam(0).lower() == "!wins":
+    elif LastCommand.GetParam(0).lower() == "!wins":
         Wins = OldWins
+        UndidCommand = LastCommand
     
-    if LastCommand.GetParam(0).lower() == "!losses":
+    elif LastCommand.GetParam(0).lower() == "!losses":
         Losses = OldLosses
+        UndidCommand = LastCommand
 
     return
 
