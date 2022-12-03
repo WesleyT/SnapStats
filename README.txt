@@ -25,6 +25,10 @@ and link it to the .txt file in the Stats folder.
 COMMANDS
 ---------
 
+SNAPSTATS
+The bot will put your stats in chat if you type
+!snapstats
+
 UNDO
 Any command here can be undone with
 !undo
@@ -66,16 +70,17 @@ Make sure to tell the bot when there is a new season using
 FIXES
 If something goes wrong and !undo cant fix it.
 You can manually adjust stats using these
-!wins #
+!setwins #
 where # is the number of wins
-!losses #
+!setlosses #
 where # is the number of losses
-!cubes #
+!setcubes #
 where # is the total number for todays cubes
-!rank # #
+!sethighestrank #
+Where # is the highest rank you have reached this season
+!setrank # #
 Where # # is the current rank and cubes in that rank
 Ex
 !rank 89 8
 Would set a rank of 89 with 8 cubes
-!hrank #
-Where # is the highest rank you have reached this season
+
