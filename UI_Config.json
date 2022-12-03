@@ -74,5 +74,89 @@
       "function": "ReadMe",
       "wsevent": "",
       "group": ""
-    }
+    },
+    "StatsCommand": {
+      "type": "textbox",
+      "value": "!snapstats",
+      "label": "Snapstats Command",
+      "tooltip": "Command to show Snap Stats",
+      "group": "Commands"
+    },
+    "UndoCommand": {
+      "type": "textbox",
+      "value": "!undo",
+      "label": "Undo Command",
+      "tooltip": "Command to undo last action",
+      "group": "Commands"
+    },
+    "CLCommand": {
+      "type": "textbox",
+      "value": "!cl",
+      "label": "Set Collection level",
+      "tooltip": "Command to set collection level",
+      "group": "Commands"
+    },
+    "VictoryCommand": {
+      "type": "textbox",
+      "value": "!cubes+",
+      "label": "Victory Command",
+      "tooltip": "Command for winning cubes",
+      "group": "Commands"
+    },
+    "DefeatCommand": {
+      "type": "textbox",
+      "value": "!cubes-",
+      "label": "Defeat/Escape Command",
+      "tooltip": "Command for losing cubes",
+      "group": "Commands"
+    },
+    "ResetCommand": {
+      "type": "textbox",
+      "value": "!snapreset",
+      "label": "Daily Reset Command",
+      "tooltip": "Command to reset daily stats",
+      "group": "Commands"
+    },
+    "SeasonCommand": {
+      "type": "textbox",
+      "value": "!newseason",
+      "label": "New Season Command",
+      "tooltip": "Command to adjust ranks for new season",
+      "group": "Commands"
+    },
+    "SetWinsCommand": {
+      "type": "textbox",
+      "value": "!setwins",
+      "label": "Set Wins Command",
+      "tooltip": "Command to fix wins",
+      "group": "Commands"
+    },
+    "SetLossesCommand": {
+      "type": "textbox",
+      "value": "!setlosses",
+      "label": "Set Losses Command",
+      "tooltip": "Command to fix losses",
+      "group": "Commands"
+    },
+    "SetCubesCommand": {
+      "type": "textbox",
+      "value": "!setcubes",
+      "label": "Set Cubes Command",
+      "tooltip": "Command to fix todays cubes",
+      "group": "Commands"
+    }, 
+    "SetHighestRankCommand": {
+      "type": "textbox",
+      "value": "!sethighestrank",
+      "label": "Set Highest Rank Command",
+      "tooltip": "Command to fix highest rank",
+      "group": "Commands"
+    }, 
+    "SetRankCommand": {
+      "type": "textbox",
+      "value": "!setrank",
+      "label": "Set Rank Command",
+      "tooltip": "Command to fix rank",
+      "group": "Commands"
+    }, 
   }

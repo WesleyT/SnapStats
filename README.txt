@@ -22,7 +22,7 @@ Then for each stat you want to display in obs add a text source
 and link it to the .txt file in the Stats folder.
 
 ---------
-COMMANDS
+COMMANDS (all can be changed in settings)
 ---------
 
 SNAPSTATS
@@ -47,6 +47,7 @@ Cubes and rank are adjusted together
 Where # is how many cubes 1,2,4,or 8
 !cubes+ 8
 Would add 8 cubes and check if a rank needs to be added as well
+NOTE. If you change cubes+ command make sure it is not similar to setcubes or cubes-
 
 DEFEAT/ESCAPE
 Cubes and rank are adjusted together
@@ -54,6 +55,7 @@ Cubes and rank are adjusted together
 Where # is how many cubes 1,2,4,or 8
 !cubes- 8
 Would remove 8 cubes and check if a rank needs to be removed as well
+NOTE. If you change cubes- command make sure it is not similar to setcubes or cubes+
 
 DAILY STATS
 Your daily stats are tracked automatically with !cubes+ and !cubes-
@@ -76,6 +78,8 @@ where # is the number of wins
 where # is the number of losses
 !setcubes #
 where # is the total number for todays cubes
+NOTE. If you change setcubes command make sure it is not similar to cubes- or cubes+
+
 !sethighestrank #
 Where # is the highest rank you have reached this season
 !setrank # #
