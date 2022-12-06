@@ -33,21 +33,21 @@
     },
     "Wins": {
       "type": "numberbox",
-      "value": 1,
+      "value": 0,
       "label": "Today's Wins",
       "tooltip": "How many Wins today",
       "group": "Daily Stats"
     },
     "Losses": {
       "type": "numberbox",
-      "value": 1,
+      "value": 0,
       "label": "Today's Losses",
       "tooltip": "How many Losses today",
       "group": "Daily Stats"
     },
     "CubesToday": {
       "type": "textbox",
-      "value": 1,
+      "value": 0,
       "label": "Today's Cubes",
       "tooltip": "How many Cubes today",
       "group": "Daily Stats"
