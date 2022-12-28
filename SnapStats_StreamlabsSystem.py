@@ -8,7 +8,7 @@ ScriptName = "Snap Stats"
 Website = "https://www.weazol.com"
 Description = "A Script to assist with displaying snap stats in OBS"
 Creator = "Weazol"
-Version = "1.2"
+Version = "1.3"
 
 settingsFile = "settings.json"
 settings = {}
@@ -369,6 +369,7 @@ def Execute(data):
                     RankCubes = RankCubes - msgAmount + 10
                     if CurrentRank != 10 and CurrentRank != 100:
                         CurrentRank -= 1
+                    else: RankCubes = 0 
                 else:
                     RankCubes -= msgAmount
                     
