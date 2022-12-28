@@ -367,7 +367,7 @@ def Execute(data):
                 # Check for rank down/remove cubes and/or rank
                 if RankCubes - msgAmount < 0:
                     RankCubes = RankCubes - msgAmount + 10
-                    if CurrentRank != 10 or CurrentRank != 100:
+                    if CurrentRank != 10 and CurrentRank != 100:
                         CurrentRank -= 1
                 else:
                     RankCubes -= msgAmount
