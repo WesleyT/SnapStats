@@ -158,5 +158,5 @@
       "label": "Set Rank Command",
       "tooltip": "Command to fix rank",
       "group": "Commands"
-    }, 
+    }
   }
