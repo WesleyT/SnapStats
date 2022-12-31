@@ -8,7 +8,7 @@ ScriptName = "Snap Stats"
 Website = "https://www.weazol.com"
 Description = "A Script to assist with displaying snap stats in OBS"
 Creator = "Weazol"
-Version = "1.3"
+Version = "2.0"
 
 settingsFile = "settings.json"
 settings = {}
@@ -141,10 +141,17 @@ def Execute(data):
     # report snap stats
     if data.IsChatMessage() and data.GetParam(0).lower() == settings["StatsCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
 
-        Parent.SendStreamMessage("Current Rank is " + str(CurrentRank) + " and " + str(RankCubes) + " cubes")
-        Parent.SendStreamMessage("Today's Stats are " + str(Wins) + " wins and " + str(Losses) + " losses with a total of " + str(CubesToday) +" cubes")
-        Parent.SendStreamMessage("Highest Rank achieved is " + str(HighestRank))
-        Parent.SendStreamMessage("Collection Level is " + str(CollectionLevel))
+        #checks for whisper else it sends to stream
+        if data.IsWhisper():
+            Parent.SendStreamWhisper(data.User, "Current Rank is " + str(CurrentRank) + " and " + str(RankCubes) + " cubes")
+            Parent.SendStreamWhisper(data.User,"Today's Stats are " + str(Wins) + " wins and " + str(Losses) + " losses with a total of " + str(CubesToday) +" cubes")
+            Parent.SendStreamWhisper(data.User,"Highest Rank achieved is " + str(HighestRank))
+            Parent.SendStreamWhisper(data.User, "Collection Level is " + str(CollectionLevel))
+        else:
+            Parent.SendStreamMessage("Current Rank is " + str(CurrentRank) + " and " + str(RankCubes) + " cubes")
+            Parent.SendStreamMessage("Today's Stats are " + str(Wins) + " wins and " + str(Losses) + " losses with a total of " + str(CubesToday) +" cubes")
+            Parent.SendStreamMessage("Highest Rank achieved is " + str(HighestRank))
+            Parent.SendStreamMessage("Collection Level is " + str(CollectionLevel))
 
     # Collection level !cl followed by a number
     if data.IsChatMessage() and data.GetParam(0).lower() == settings["CLCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
@@ -162,12 +169,21 @@ def Execute(data):
             Write()
             LastCommand = data
             UndidCommand = " "
-            Parent.SendStreamMessage("Collection level updated")
+
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Collection level updated")
+            else:
+                Parent.SendStreamMessage("Collection level updated")
 
         except:
-            Parent.SendStreamMessage("Failed to set collection level")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Failed to set collection level")
+            else:
+                Parent.SendStreamMessage("Failed to set collection level")
 
-    # Rank !rank followed by a number
+    # Rank !setrank followed by a number
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["SetRankCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
@@ -186,13 +202,21 @@ def Execute(data):
 
             Write()
             LastCommand = data
-            UndidCommand = " "
-            Parent.SendStreamMessage("Rank updated")
+            UndidCommand = " "  
+            
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Rank updated")
+            else:
+                Parent.SendStreamMessage("Rank updated")
 
         except:
-            Parent.SendStreamMessage("Failed to set rank")
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Failed to set rank")
+            else:
+                Parent.SendStreamMessage("Failed to set rank")
 
-    # Wins !wins followed by a number
+    # Wins !setwins followed by a number
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["SetWinsCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
@@ -207,12 +231,20 @@ def Execute(data):
             Write()
             LastCommand = data
             UndidCommand = " "
-            Parent.SendStreamMessage("Wins updated")
+             #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Wins updated")
+            else:
+                Parent.SendStreamMessage("Wins updated")
 
         except:
-            Parent.SendStreamMessage("Failed to set wins")
+             #checks for whisper else it sends to stream
+            if data.IsWhisper():    
+                Parent.SendStreamWhisper(data.User, "Failed to set wins")
+            else:
+                Parent.SendStreamMessage("Failed to set wins")
 
-    # Losses !losses followed by a number
+    # Losses !setlosses followed by a number
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["SetLossesCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
@@ -228,12 +260,21 @@ def Execute(data):
             Write()
             LastCommand = data
             UndidCommand = " "
-            Parent.SendStreamMessage("Losses updated")
+            
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Losses updated")
+            else:
+                Parent.SendStreamMessage("Losses updated")
 
         except:
-            Parent.SendStreamMessage("Failed to set losses")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Failed to set losses")
+            else:
+                Parent.SendStreamMessage("Failed to set losses")
 
-    # Todays cubes !cubes followed by a number
+    # Todays cubes !setcubes followed by a number
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["SetCubesCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
         try:
             #Verifys an interger follows
@@ -249,10 +290,18 @@ def Execute(data):
             Write()
             LastCommand = data
             UndidCommand = " "
-            Parent.SendStreamMessage("Cubes updated")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Cubes updated")
+            else:
+                Parent.SendStreamMessage("Cubes updated")
 
         except:
-            Parent.SendStreamMessage("Failed to set cubes")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Failed to set cubes")
+            else:
+                Parent.SendStreamMessage("Failed to set cubes")
 
     # Highestrank (for fixes only)
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["SetHighestRankCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
@@ -270,10 +319,18 @@ def Execute(data):
             Write()
             LastCommand = data
             UndidCommand = " "
-            Parent.SendStreamMessage("Highest Rank updated")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Highest Rank updated")
+            else:
+                Parent.SendStreamMessage("Highest Rank updated")
 
         except:
-            Parent.SendStreamMessage("Failed to set Highest Rank")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Failed to set Highest Rank")
+            else:
+                Parent.SendStreamMessage("Failed to set Highest Rank")
 
     # New season
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["SeasonCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
@@ -294,10 +351,18 @@ def Execute(data):
             Write()
             LastCommand = data
             UndidCommand = " "
-            Parent.SendStreamMessage("New snap season! rank updated")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "New snap season! rank updated")
+            else:
+                Parent.SendStreamMessage("New snap season! rank updated")
 
         except:
-            Parent.SendStreamMessage("Failed to set rank")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Failed to set rank")
+            else:
+                Parent.SendStreamMessage("Failed to set rank")
 
     # Cubes added
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["VictoryCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
@@ -336,14 +401,25 @@ def Execute(data):
                 Write()
                 UndidCommand = " "
                 LastCommand = data
-
-                Parent.SendStreamMessage("Stats updated")
+                #checks for whisper else it sends to stream
+                if data.IsWhisper():
+                    Parent.SendStreamWhisper(data.User, "Stats updated")
+                else:
+                    Parent.SendStreamMessage("Stats updated")
             
             else:
-                Parent.SendStreamMessage("Not a Valid number")
+                #checks for whisper else it sends to stream
+                if data.IsWhisper():
+                    Parent.SendStreamWhisper(data.User, "Not a Valid number")
+                else:
+                    Parent.SendStreamMessage("Not a Valid number")
 
         except:
-            Parent.SendStreamMessage("Failed to update stats")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Failed to update stats")
+            else:
+                Parent.SendStreamMessage("Failed to update stats")
 
     # Cubes removed
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["DefeatCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
@@ -378,12 +454,24 @@ def Execute(data):
                 UndidCommand = " "
                 LastCommand = data
 
-                Parent.SendStreamMessage("Stats updated")
+                #checks for whisper else it sends to stream
+                if data.IsWhisper():
+                    Parent.SendStreamWhisper(data.User, "Stats updated")
+                else:
+                    Parent.SendStreamMessage("Stats updated")
             else:
-                Parent.SendStreamMessage("Not a Valid number")
+                #checks for whisper else it sends to stream
+                if data.IsWhisper():
+                    Parent.SendStreamWhisper(data.User, "Not a Valid number")
+                else:
+                    Parent.SendStreamMessage("Not a Valid number")
 
         except:
-            Parent.SendStreamMessage("Failed to update stats")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Failed to update stats")
+            else:
+                Parent.SendStreamMessage("Failed to update stats")
 
     # Reset command !snapreset resets daily cubes, wins, and losses
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["ResetCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
@@ -396,10 +484,18 @@ def Execute(data):
             Reset()
             UndidCommand = " "
             LastCommand = data
-            Parent.SendStreamMessage("Daily Snap stats reset")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Daily Snap stats reset")
+            else:
+                Parent.SendStreamMessage("Daily Snap stats reset")
 
         except:
-            Parent.SendStreamMessage("Reset failed")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Reset failed")
+            else:
+                Parent.SendStreamMessage("Reset failed")
 
     # Undo
     elif data.IsChatMessage() and data.GetParam(0).lower() == settings["UndoCommand"] and Parent.HasPermission(data.User,settings["Permission"],settings["Username"]):
@@ -407,11 +503,19 @@ def Execute(data):
             Undo()
             #saves changes
             Write()
-
-            Parent.SendStreamMessage("Last SnapStats action undone")
+            
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Last SnapStats action undone")
+            else:
+                Parent.SendStreamMessage("Last SnapStats action undone")
 
         except:
-            Parent.SendStreamMessage("Couldn't undo")
+            #checks for whisper else it sends to stream
+            if data.IsWhisper():
+                Parent.SendStreamWhisper(data.User, "Couldn't undo")
+            else:
+                Parent.SendStreamMessage("Couldn't undo")
     
     return
 
