@@ -394,8 +394,8 @@ def Execute(data):
                     HighestRank = CurrentRank
                     # gives extra level for ever 10 levels under 100
                     if HighestRank % 10 == 0 and HighestRank < 101:
-                        CurrentRank +=1
-                        HighestRank +=1
+                        CurrentRank +=5
+                        HighestRank +=5
 
                 # saves changes
                 Write()
