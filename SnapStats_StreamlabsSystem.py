@@ -8,7 +8,7 @@ ScriptName = "Snap Stats"
 Website = "https://www.weazol.com"
 Description = "A Script to assist with displaying snap stats in OBS"
 Creator = "Weazol"
-Version = "2.0"
+Version = "2.1"
 
 settingsFile = "settings.json"
 settings = {}
@@ -383,8 +383,8 @@ def Execute(data):
                 Wins += 1
 
                 # Check for rank up/add cubes and/or rank
-                if RankCubes + msgAmount >= 10:
-                    RankCubes = RankCubes + msgAmount - 10
+                if RankCubes + msgAmount >= 7:
+                    RankCubes = RankCubes + msgAmount - 7
                     CurrentRank += 1
                 else:
                     RankCubes += msgAmount
@@ -394,8 +394,8 @@ def Execute(data):
                     HighestRank = CurrentRank
                     # gives extra level for ever 10 levels under 100
                     if HighestRank % 10 == 0 and HighestRank < 101:
-                        CurrentRank +=5
-                        HighestRank +=5
+                        CurrentRank +=3
+                        HighestRank +=3
 
                 # saves changes
                 Write()
