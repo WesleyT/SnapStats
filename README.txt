@@ -19,7 +19,7 @@ stat you want to display.
 I have included a shitty paint example.
 
 Then for each stat you want to display in obs add a text source
-and link it to the txt file in the Stats folder.
+and link it to the .txt file in the Stats folder.
 
 ---------
 COMMANDS (all can be changed in settings)
