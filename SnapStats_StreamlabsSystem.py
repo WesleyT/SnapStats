@@ -8,7 +8,7 @@ ScriptName = "Snap Stats"
 Website = "https://www.weazol.com"
 Description = "A Script to assist with displaying snap stats in OBS"
 Creator = "Weazol"
-Version = "2.1"
+Version = "2.2"
 
 settingsFile = "settings.json"
 settings = {}
